@@ -21,8 +21,11 @@ namespace LabirynthGame
 
         private char[,] matrix;
         private OrderedMultiDictionary<int, string> scoreBoard;
-       
+      
+        // + class for point for example
 
+
+        // Labyrinth
         public Labirynth()
         {
             this.playerPositionX = px;
@@ -55,6 +58,7 @@ namespace LabirynthGame
                 return;
             }
         }
+
         private bool IsMoveValid(int x, int y)
         {
             if (x < 0 || x > size - 1 || y < 0 || y > size - 1)
@@ -64,6 +68,7 @@ namespace LabirynthGame
 
             return true;
         }
+
         private void PrintLabirynth()
         {
             for (int row = 0; row < size; row++)
@@ -75,6 +80,7 @@ namespace LabirynthGame
                 Console.WriteLine();
             }
         }
+
         private char[,] GenerateMatrix()
         { 
             char[,] generatedMatrix = new char[size, size];
@@ -104,6 +110,7 @@ namespace LabirynthGame
             Console.WriteLine("scoreboard, 'restart' to start a new game and 'exit' to quit the game.");
             return generatedMatrix;
         }
+
         private void MakeAtLeastOneExitReachable(char[,] generatedMatrix)
         {
             Random rand = new Random();
@@ -140,18 +147,9 @@ namespace LabirynthGame
                 }
             }
         }
+   
 
-        private bool IsGameOver(int playerPositionX, int playerPositionY)
-        {
-            if ((playerPositionX > 0 && playerPositionX < size-1) && 
-                (playerPositionY > 0 && playerPositionY < size-1))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
+        // Score
         private int GetWorstScore()
         {
 
@@ -195,6 +193,41 @@ namespace LabirynthGame
             Console.WriteLine();
         }
 
+        private void UpdateScoreBoard(int currentNumberOfMoves)
+        {
+            string userName = string.Empty;
+
+            if (this.scoreBoard.Count < 5)
+            {
+                while (userName == string.Empty)
+                {
+                    Console.WriteLine("**Please put down your name:**");
+                    userName = Console.ReadLine();
+                }
+                this.scoreBoard.Add(currentNumberOfMoves, userName);
+            }
+            else
+            {
+                int worstScore = this.GetWorstScore();
+                if (currentNumberOfMoves <= worstScore)
+                {
+                    if (this.scoreBoard.ContainsKey(currentNumberOfMoves) == false)
+                    {
+                        this.scoreBoard.Remove(worstScore);
+                    }
+                    while (userName == string.Empty)
+                    {
+                        Console.WriteLine("**Please put down your name:**");
+                        userName = Console.ReadLine();
+                    }
+                    this.scoreBoard.Add(currentNumberOfMoves, userName);
+                }
+            }
+        }
+
+
+        // Engine
+
         public void PlayGame()
         {
             string command = string.Empty;
@@ -229,6 +262,17 @@ namespace LabirynthGame
      
 
 
+        }
+
+        private bool IsGameOver(int playerPositionX, int playerPositionY)
+        {
+            if ((playerPositionX > 0 && playerPositionX < size - 1) &&
+                (playerPositionY > 0 && playerPositionY < size - 1))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private void ExecuteCommand(string command, ref int movesCounter)
@@ -283,37 +327,6 @@ namespace LabirynthGame
                         Console.ReadKey();
                         break;
                     }
-            }
-        }
-        private void UpdateScoreBoard(int currentNumberOfMoves)
-        {
-            string userName = string.Empty;
-
-            if (this.scoreBoard.Count < 5)
-            {
-                while (userName == string.Empty)
-                {
-                    Console.WriteLine("**Please put down your name:**");
-                    userName = Console.ReadLine();
-                }
-                this.scoreBoard.Add(currentNumberOfMoves, userName);
-            }
-            else
-            {
-                int worstScore = this.GetWorstScore();
-                if (currentNumberOfMoves <= worstScore)
-                {
-                    if (this.scoreBoard.ContainsKey(currentNumberOfMoves) == false)
-                    {
-                        this.scoreBoard.Remove(worstScore);
-                    }
-                    while (userName == string.Empty)
-                    {
-                        Console.WriteLine("**Please put down your name:**");
-                        userName = Console.ReadLine();
-                    }
-                    this.scoreBoard.Add(currentNumberOfMoves, userName);
-                }
             }
         }
     }
